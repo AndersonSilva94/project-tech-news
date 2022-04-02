@@ -45,7 +45,20 @@ def scrape_novidades(html_content):
 
 # Requisito 3
 def scrape_next_page_link(html_content):
-    """Seu código deve vir aqui"""
+    """
+    Requisito 3 - passos a se seguir:
+    1 - A função recebe uma string com o conteúdo HTML da página
+    2 - A função deve fazer uma raspagem de dados para retornar
+        a URL da próxima página
+    3 - Retornar essa URL
+    4 - Caso não encontre url, retornar None
+    """
+    selector_element = Selector(html_content)
+    next_link = selector_element.css("a.tec--btn::attr(href)").get()
+    if next_link:
+        return next_link
+    else:
+        return None
 
 
 # Requisito 4
