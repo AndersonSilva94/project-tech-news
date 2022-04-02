@@ -1,5 +1,6 @@
 import requests
 import time
+from parsel import Selector
 
 
 # Requisito 1
@@ -27,7 +28,19 @@ def fetch(url):
 
 # Requisito 2
 def scrape_novidades(html_content):
-    """Seu código deve vir aqui"""
+    """
+    Requisito 2 - passos a se seguir:
+    1 - A função recebe uma string com o conteúdo HTML da página
+    2 - A função deve fazer uma raspagem de dados do conteúdo
+        recebido para criar uma lista com URL's de notícias
+    3 - Retornar essa lista
+    4 - Caso não encontre url, retornar uma lista vazia
+    """
+    selector_element = Selector(html_content)
+    links = []
+    for link in selector_element.css("h3.tec--card__title"):
+        links.append(link.css("a.tec--card__title__link::attr(href)").get())
+    return links
 
 
 # Requisito 3
