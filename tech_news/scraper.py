@@ -62,12 +62,16 @@ def scrape_next_page_link(html_content):
 
 
 # Requisito 4
-def get_generic_infos_news(css_code, selector_element):
+def get_generic_infos_news(css_code, selector_element, variable):
     """
     Criar uma função que recebe o mesmo parâmetro, e trabalham
     com a mesma lógica de retorno dos dados
     """
-    return selector_element.css(css_code).get()
+    if variable == "summary_value":
+        result = selector_element.css(css_code).getall()
+    else:
+        result = selector_element.css(css_code).get()
+    return result
 
 
 def get_writer_news(css_code, selector_element):
@@ -115,15 +119,18 @@ def scrape_noticia(html_content):
     selector_element = Selector(html_content)
     url_value = get_generic_infos_news(
         "head link[rel=canonical]::attr(href)",
-        selector_element
+        selector_element,
+        "url_value"
     )
     title_value = get_generic_infos_news(
         "h1.tec--article__header__title::text",
-        selector_element
+        selector_element,
+        "title_value"
     )
     timestamp_value = get_generic_infos_news(
         "time#js-article-date::attr(datetime)",
-        selector_element
+        selector_element,
+        "timestamp_value"
     )
     writer_value = get_writer_news(
         "p.z--font-bold *::text",
@@ -137,13 +144,19 @@ def scrape_noticia(html_content):
         "button#js-comments-btn::attr(data-count)",
         selector_element
     )
+    summary_value = "".join(get_generic_infos_news(
+        "div.tec--article__body > p:nth-child(1) ::text",
+        selector_element,
+        "summary_value"
+    ))
     data_news = {
         "url": url_value,
         "title": title_value,
         "timestamp": timestamp_value,
         "writer": writer_value,
         "shares_count": shares_value,
-        "comments_count": comments_value
+        "comments_count": comments_value,
+        "summary": summary_value
     }
     return data_news
 
