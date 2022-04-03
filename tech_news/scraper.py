@@ -1,6 +1,7 @@
 import requests
 import time
 from parsel import Selector
+from tech_news.database import create_news
 
 
 # Requisito 1
@@ -187,4 +188,41 @@ print(scrape_noticia(fetch(url_test)))
 
 # Requisito 5
 def get_tech_news(amount):
-    """Seu código deve vir aqui"""
+    """
+    Requisito 5 - Passos a se seguir:
+    1 - A função recebe um parâmetro que é utilizado para buscar a quantidade
+        exatas de notícias que foi passado
+    2 - Utilizar as funções anteriores para criar a lógica de buscar e
+        processar o conteúdo.
+    3 - Salvar as notícias no mongodb e retorná-las logo após
+
+    Lógica a se pensar:
+    1 - fazer o fecth da url e salvar numa variável
+    2 - percorrer essa variável enquanto ela for menor que amount
+    3 - armazenar em uma variável o valor da próxima página
+    4 - fazer o fetch formatado dessa url armazenada anteriormente
+    5 - juntar à lista de urls, cada link de notícia
+    6 - para cada item da lista de urls, limitando a quantidade passada
+        - fazer uma requisição da página
+        - adicionar à nova lista (de dados gerais) cada um dos valores
+        trazidos anteriormente
+    7 - salvar essa lista no banco de dados
+    8 - retornar a lista
+    """
+    url = "https://www.tecmundo.com.br/novidades"
+    html_content = fetch(url)
+    list_news = scrape_novidades(html_content)
+    new_list_news = []
+
+    while len(list_news) < amount:
+        next_page = scrape_next_page_link(html_content)
+        next_page_content = fetch(next_page)
+        for news_url in scrape_novidades(next_page_content):
+            list_news.append(news_url)
+
+    for link_news in range(amount):
+        news_content = fetch(list_news[link_news])
+        new_list_news.append(scrape_noticia(news_content))
+
+    create_news(new_list_news)
+    return new_list_news
