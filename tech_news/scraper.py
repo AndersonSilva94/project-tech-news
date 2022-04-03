@@ -70,6 +70,19 @@ def get_generic_infos_news(css_code, selector_element):
     return selector_element.css(css_code).get()
 
 
+def get_writer_news(css_code, selector_element):
+    """
+    Criar a função que vai buscar o nome do autor e caso não encontre
+    retornar None
+    """
+    writer_value = selector_element.css(css_code).get()
+    if writer_value:
+        # o strip serve para tirar espaços vazios no início e fim da string
+        return writer_value.strip()
+    else:
+        return None
+
+
 def scrape_noticia(html_content):
     """BOMBAAAA! Ôh Requisito pai d'égua
     Requisito 4 - Passos a se seguir:
@@ -99,17 +112,24 @@ def scrape_noticia(html_content):
         "time#js-article-date::attr(datetime)",
         selector_element
     )
+    writer_value = get_writer_news(
+        "p.z--font-bold *::text",
+        selector_element
+    )
     data_news = {
         "url": url_value,
         "title": title_value,
-        "timestamp": timestamp_value
+        "timestamp": timestamp_value,
+        "writer": writer_value
     }
     return data_news
 
 
-"""url_test = ("https://www.tecmundo.com.br/mobilidade-urbana-smart-cities/"
+"""
+url_test = ("https://www.tecmundo.com.br/mobilidade-urbana-smart-cities/"
             + "155000-musk-tesla-carros-totalmente-autonomos.htm")
-print(scrape_noticia(fetch(url_test)))"""
+print(scrape_noticia(fetch(url_test)))
+"""
 
 
 # Requisito 5
