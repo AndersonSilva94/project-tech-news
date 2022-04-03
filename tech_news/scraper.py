@@ -74,17 +74,16 @@ def get_generic_infos_news(css_code, selector_element, variable):
     return result
 
 
-def get_writer_news(css_code, selector_element):
+def get_writer_news(selector_element):
     """
     Criar a função que vai buscar o nome do autor e caso não encontre
     retornar None
     """
-    writer_value = selector_element.css(css_code).get()
-    if writer_value:
-        # o strip serve para tirar espaços vazios no início e fim da string
-        return writer_value.strip()
+    writer_value = selector_element.css("p.z--font-bold *::text").get()
+    if writer_value is None:
+        return selector_element.css("div.tec--timestamp__item a::text").get()
     else:
-        return None
+        return writer_value
 
 
 def get_numbers_info_news(css_code, selector_element):
@@ -98,6 +97,15 @@ def get_numbers_info_news(css_code, selector_element):
         return int(number_value.strip().split(" ")[0])
     else:
         return 0
+
+
+def get_list_info_news(css_code, selector_element):
+    """
+    Criar uma função que vai tratar valores de lista para serem retornados
+    """
+    result = selector_element.css(css_code).getall()
+    list_result = [element.strip() for element in result]
+    return list_result
 
 
 def scrape_noticia(html_content):
@@ -133,9 +141,8 @@ def scrape_noticia(html_content):
         "timestamp_value"
     )
     writer_value = get_writer_news(
-        "p.z--font-bold *::text",
         selector_element
-    )
+    ).strip()
     shares_value = get_numbers_info_news(
         "nav.tec--toolbar > div:first-child::text",
         selector_element
@@ -149,6 +156,14 @@ def scrape_noticia(html_content):
         selector_element,
         "summary_value"
     ))
+    sources_value = get_list_info_news(
+        "div.z--mb-16 div a::text",
+        selector_element
+    )
+    categories_value = get_list_info_news(
+        "div#js-categories a::text",
+        selector_element
+    )
     data_news = {
         "url": url_value,
         "title": title_value,
@@ -156,7 +171,9 @@ def scrape_noticia(html_content):
         "writer": writer_value,
         "shares_count": shares_value,
         "comments_count": comments_value,
-        "summary": summary_value
+        "summary": summary_value,
+        "sources": sources_value,
+        "categories": categories_value
     }
     return data_news
 
