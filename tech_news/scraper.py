@@ -62,8 +62,54 @@ def scrape_next_page_link(html_content):
 
 
 # Requisito 4
+def get_generic_infos_news(css_code, selector_element):
+    """
+    Criar uma função que recebe o mesmo parâmetro, e trabalham
+    com a mesma lógica de retorno dos dados
+    """
+    return selector_element.css(css_code).get()
+
+
 def scrape_noticia(html_content):
-    """Seu código deve vir aqui"""
+    """BOMBAAAA! Ôh Requisito pai d'égua
+    Requisito 4 - Passos a se seguir:
+    1 - A função recebe o conteúdo geral de uma página de notícias
+    2 - Essa função deve percorrer o conteúdo, procurando informações
+        que vão preencher um dicionário com os atributos:
+        url, title, timestamp, writer, shares_count, comments_count, summary
+        sources, categories
+    3 - Alguns pontos:
+        - caso o writer não seja encontrado, salvar como None
+        - caso shares_count não seja encontrado, salvar como 0
+    4 - retornar esse dict
+
+    Lógica principal: criar funções que vão fazer as tratativas para
+    retornar cada um dos retornos esperados
+    """
+    selector_element = Selector(html_content)
+    url_value = get_generic_infos_news(
+        "head link[rel=canonical]::attr(href)",
+        selector_element
+    )
+    title_value = get_generic_infos_news(
+        "h1.tec--article__header__title::text",
+        selector_element
+    )
+    timestamp_value = get_generic_infos_news(
+        "time#js-article-date::attr(datetime)",
+        selector_element
+    )
+    data_news = {
+        "url": url_value,
+        "title": title_value,
+        "timestamp": timestamp_value
+    }
+    return data_news
+
+
+"""url_test = ("https://www.tecmundo.com.br/mobilidade-urbana-smart-cities/"
+            + "155000-musk-tesla-carros-totalmente-autonomos.htm")
+print(scrape_noticia(fetch(url_test)))"""
 
 
 # Requisito 5
