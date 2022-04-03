@@ -83,6 +83,19 @@ def get_writer_news(css_code, selector_element):
         return None
 
 
+def get_numbers_info_news(css_code, selector_element):
+    """
+    Criar uma função que vai pegar os valores de compartilhamento
+    e comentários e retornar seus números, caso não exista valor
+    retornar 0
+    """
+    number_value = selector_element.css(css_code).get()
+    if number_value:
+        return int(number_value.strip().split(" ")[0])
+    else:
+        return 0
+
+
 def scrape_noticia(html_content):
     """BOMBAAAA! Ôh Requisito pai d'égua
     Requisito 4 - Passos a se seguir:
@@ -116,11 +129,21 @@ def scrape_noticia(html_content):
         "p.z--font-bold *::text",
         selector_element
     )
+    shares_value = get_numbers_info_news(
+        "nav.tec--toolbar > div:first-child::text",
+        selector_element
+    )
+    comments_value = get_numbers_info_news(
+        "button#js-comments-btn::attr(data-count)",
+        selector_element
+    )
     data_news = {
         "url": url_value,
         "title": title_value,
         "timestamp": timestamp_value,
-        "writer": writer_value
+        "writer": writer_value,
+        "shares_count": shares_value,
+        "comments_count": comments_value
     }
     return data_news
 
