@@ -78,7 +78,25 @@ def search_by_date(date):
 
 # Requisito 8
 def search_by_source(source):
-    """Seu código deve vir aqui"""
+    """
+    Requisito 8 - Passos a se seguir:
+    1 - Buscar no banco de dados, notícias por source
+    2 - Segue os mesmos passos dos requisitos anteriores
+
+    Lógica a se pensar:
+    1- Segue a mesma linha de lógica de busca e retorno dos
+    requisitos anteriores
+    """
+    data_results = search_news({
+        "sources": {
+            "$regex": source,
+            "$options": "i"
+        }
+    })
+    list_tuples = []
+    for news_dict in data_results:
+        list_tuples.append((news_dict["title"], news_dict["url"]))
+    return list_tuples
 
 
 # Requisito 9
