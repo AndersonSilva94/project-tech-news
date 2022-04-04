@@ -11,23 +11,28 @@ Requisito 12 - Passos a se seguir:
      5 - Listar top 5 notícias;
      6 - Listar top 5 categorias;
      7 - Sair.
-3 - Caso a opção 0 seja selecionada - retornar "Digite quantas notícias serão buscadas:"
+3 - Caso a opção 0 seja selecionada
+    - retornar "Digite quantas notícias serão buscadas:"
     - Caso seja o 1 - "Digite o título:"
     - Caso seja o 2 - "Digite a data no formato aaaa-mm-dd:"
     - Caso seja o 3 - "Digite a fonte:"
     - Caso seja o 4 - "Digite a categoria:"
-4 - Caso não seja nenhuma dessas opções retornar "Opção inválida" com sys.stderr
+4 - Caso não seja nenhuma dessas opções:
+    - retornar "Opção inválida" com sys.stderr
 5 - Usar o input para receber a entrada de dados da pessoa usuária
 
 Lógica a se seguir:
-1 - Criar os inputs com os valores que vão ser digitados com suas respectivas mensagens
+1 - Criar os inputs com os valores que vão ser digitados
+    com suas respectivas mensagens
     - um input que vai 'mostrar o menu' pro usuário com as opções
-2 - para as mensagens que serão trazidas conforme a tecla apertada, posso criar um
-    dict onde cada chave é a opção, e seu valor é o input com a mensagem
+2 - para as mensagens que serão trazidas conforme a tecla apertada,
+    posso criar um dict onde cada chave é a opção,
+    e seu valor é o input com a mensagem
 3 - fazer um try que será um print do dict na posição que a pessoa irá digitar
-4 - caso a pessoa digite um valor inexistente, retornar um stderr.write("Opção inválida")
+4 - caso a pessoa digite um valor inexistente,
+    retornar um stderr.write("Opção inválida")
 
-OBS: usei a documentação para ver qual o tipo de except seria levantado no erro:
+OBS: usei a documentação para ver qual tipo de except seria levantado no erro:
 https://docs.python.org/3/library/exceptions.html
 """
 from sys import stderr
