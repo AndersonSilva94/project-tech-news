@@ -44,4 +44,40 @@ def top_5_news():
 
 # Requisito 11
 def top_5_categories():
-    """Seu código deve vir aqui"""
+    """
+    Requisito 11 - Passos a se seguir:
+    1 - A função vai listar as cinco categorias mais presentes no db
+    2 - Ordenar as categorias de forma ascendente
+    3 - Retornar as categorias em forma de lista de strings
+    6 - Retornar quantas categorias existirem, caso tenha menos que 5
+    7 - Caso não seja encontrado, retornar uma lista vazia
+
+    Lógica a se pensar:
+    Ó o aggregations aí de novo (kkk):
+    1 - Criar uma variável que vai receber um lista que passa por um pipeline
+    2 - Contruir o pipeline da seguinte maneira:
+        - Como categorias é uma lista, posso usar um $unwind para criar
+        uma nova dict para cada valor da lista
+        - Fazer um agrupamento $group com as categorias
+        - fazer um $sort de categorias
+        - fazer um $limit de 5
+    3 - retornar a lista com as strings de categorias
+
+    Para entender o assunto de aggregations, consultei a documentação:
+    https://www.mongodb.com/docs/manual/reference/operator/aggregation-pipeline/
+    """
+    search_news = db.news.aggregate([
+        {"$unwind": "$categories"},
+        {"$group": {
+            "_id": "$categories"
+        }},
+        {"$sort": {"_id": 1}},
+        {"$limit": 5}
+    ])
+    list_top_5_categories = []
+    for news_dicts in search_news:
+        list_top_5_categories.append((news_dicts["_id"]))
+    return list_top_5_categories
+
+
+# print(top_5_categories())
